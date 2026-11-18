@@ -1,0 +1,89 @@
+.pending-file {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 8px;
+    width: 100%;
+}
+
+.pending-file-track {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 8px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    flex: 1;
+    min-width: 0;
+}
+
+.pending-file-track::-webkit-scrollbar {
+    display: none;
+}
+
+.pending-file-card {
+    max-width: 120px;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border: 2px solid #c39d2a;
+    border-radius: 10px;
+    background: #fff8e8;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+}
+
+.pending-file-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #333;
+}
+
+.pending-file-remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.pending-file-remove:hover {
+    background: rgba(195, 157, 42, 0.2);
+}
+
+.pending-file-card img {
+    flex-shrink: 0;
+}
+
+.pending-file-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 999px;
+    background: #c39d2a;
+    cursor: pointer;
+    padding: 0;
+}
+
+.pending-file-arrow img {
+    display: block;
+    filter: brightness(0) invert(1);
+}
+
+.pending-file-arrow:disabled {
+    opacity: 0.35;
+    cursor: default;
+}

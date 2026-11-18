@@ -1,0 +1,23 @@
+# Secrets / local
+.env
+backend/.env
+NOTES-PERSO.md
+
+# Python
+backend/.venv/
+backend/__pycache__/
+backend/**/__pycache__/
+*.pyc
+.pytest_cache/
+
+# Données runtime
+backend/data/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/

@@ -1,0 +1,20 @@
+.message-view {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 4px 2px 12px;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.message-view:empty::before {
+    content: 'Pose une question ou ajoute un document…';
+    display: block;
+    margin: auto;
+    text-align: center;
+    color: #a0893a;
+    font-size: 14px;
+    padding: 24px 12px;
+}
