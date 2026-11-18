@@ -1,7 +1,7 @@
 import os
 from openai import OpenAI
 from dotenv import load_dotenv
-from qdrant_client.http.models import Filter, FieldCondition, MatchAny
+from qdrant_client.http.models import Filter, FieldCondition, MatchAny, MatchValue
 from ingestion import embed_texts, get_qdrant, COLLECTION
 
 load_dotenv()
@@ -16,23 +16,26 @@ def search_chunks(
     query: str,
     top_k: int = 5,
     document_ids: list[str] | None = None,
+    conversation_id: str | None = None,
 ) -> list[dict]:
     vector = embed_texts([query])[0]
     client = get_qdrant()
-    query_filter = None
-    if document_ids:
-        query_filter = Filter(
-            must=[FieldCondition(key="doc_id", match=MatchAny(any=document_ids))]
+    must = []
+    if conversation_id:
+        must.append(
+            FieldCondition(key="conversation_id", match=MatchValue(value=conversation_id))
         )
+    if document_ids:
+        must.append(FieldCondition(key="doc_id", match=MatchAny(any=document_ids)))
 
-    # Scoped uploads: pull more chunks and skip score cutoff so vague
-    # questions ("what's in this file?") still cover the attached docs.
-    limit = max(top_k, 10) if document_ids else top_k
+    query_filter = Filter(must=must) if must else None
+    scoped = bool(must)
+    limit = max(top_k, 10) if scoped else top_k
     results = client.query_points(
         collection_name=COLLECTION,
         query=vector,
         limit=limit,
-        score_threshold=None if document_ids else 0.5,
+        score_threshold=None if scoped else 0.5,
         query_filter=query_filter,
         with_payload=True,
     )
@@ -59,14 +62,22 @@ Règles strictes :
 7. Pour une question large ("que contient ce fichier / ces documents ?"), résume les thèmes et faits principaux présents dans les extraits, organisés selon le contenu réel (pas une grille fixe).
 8. Si plusieurs sources, distingue-les clairement et cite [n] après les faits importants.
 9. Si hors-sujet ou vide : "Je ne trouve pas cette information dans les documents fournis."
+10. Si une liste doit être affichée, utilise des puces.
+
 """
 
 def answer_with_rag(
     message: str,
     top_k: int = 5,
     document_ids: list[str] | None = None,
+    conversation_id: str | None = None,
 ) -> dict:
-    chunks = search_chunks(message, top_k=top_k, document_ids=document_ids)
+    chunks = search_chunks(
+        message,
+        top_k=top_k,
+        document_ids=document_ids,
+        conversation_id=conversation_id,
+    )
     if not chunks:
         return {
             "answer": "Je ne trouve pas cette information dans les documents fournis.",

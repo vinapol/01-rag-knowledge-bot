@@ -14,29 +14,41 @@
     z-index: 1000;
 }
 
+.widget-main {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+}
+
 .widget-container-header {
     position: relative;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     background-color: #c39d2a;
-    padding: 10px 40px;
+    padding: 10px;
     border-radius: 10px;
     margin-bottom: 10px;
 }
 
 .widget-container-header h1 {
-    font-size: 30px;
+    flex: 1;
+    min-width: 0;
+    font-size: 20px;
     font-weight: bold;
     font-family: 'Sora', sans-serif;
     text-align: center;
     margin: 0;
     color: #fff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.widget-close {
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
+.widget-header-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -47,15 +59,27 @@
     background: rgba(255, 255, 255, 0.2);
     cursor: pointer;
     padding: 0;
+    color: #fff;
+    flex-shrink: 0;
 }
 
-.widget-close:hover {
+.widget-header-btn:hover {
     background: rgba(255, 255, 255, 0.32);
 }
 
-.widget-close img {
+.widget-header-btn img {
     display: block;
     filter: brightness(0) invert(1);
+}
+
+.widget-history {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.widget-header-spacer {
+    width: 32px;
+    flex-shrink: 0;
 }
 
 .inputs-container {

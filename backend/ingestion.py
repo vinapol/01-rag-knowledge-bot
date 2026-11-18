@@ -23,7 +23,13 @@ def ensure_collection(vector_size: int) -> None:
             vectors_config=VectorParams(size=vector_size, distance=Distance.COSINE),
         )
 
-def upsert_chunks(doc_id: str, filename: str, chunks: list[str], vectors: list[list[float]]) -> int:
+def upsert_chunks(
+    doc_id: str,
+    filename: str,
+    chunks: list[str],
+    vectors: list[list[float]],
+    conversation_id: str | None = None,
+) -> int:
     if len(chunks) != len(vectors):
         raise ValueError("Number of chunks and vectors must be the same")
     if not vectors:
@@ -40,6 +46,7 @@ def upsert_chunks(doc_id: str, filename: str, chunks: list[str], vectors: list[l
                 "filename": filename,
                 "chunk_index": i,
                 "text": chunk,
+                "conversation_id": conversation_id,
             },
         )
         for i, (chunk, vector) in enumerate(zip(chunks, vectors))
@@ -100,10 +107,21 @@ def chunk_text(text: str, chunk_size: int = 500, overlap: int = 50) -> list[str]
         start = end - overlap
     return chunks
 
-def ingest_document(path: Path, doc_id: str, filename: str) -> int:
+def ingest_document(
+    path: Path,
+    doc_id: str,
+    filename: str,
+    conversation_id: str | None = None,
+) -> int:
     text = read_text(path)
     chunks = chunk_text(text)
     if not chunks:
         return 0
     vectors = embed_texts(chunks)
-    return upsert_chunks(doc_id, filename, chunks, vectors)
+    return upsert_chunks(
+        doc_id,
+        filename,
+        chunks,
+        vectors,
+        conversation_id=conversation_id,
+    )
